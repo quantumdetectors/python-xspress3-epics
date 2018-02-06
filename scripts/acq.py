@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import logging
+import pprint
 import time
 from xspress3 import Xspress3, HDF5
 
@@ -28,7 +29,8 @@ x3.add_frame_callback(frame_callback)
 x3.set(trigger_mode='Internal', num_images=10, exposure_time=0.5)
 
 # Get current configuration
-print 'Device Config', x3.get()
+print 'Device Config'
+pprint.pprint(x3.get())
 
 
 # Start acquiring
