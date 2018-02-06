@@ -112,8 +112,9 @@ class Xspress3:
             self.logger.debug('  Ch {ch} Time {t} Events {e} Reset {r}'.format(ch=c, t=self.sca(c, 0), e=self.sca(c,3), r=self.sca(c,2)))
             self.logger.debug('    MCA Counts {cts}'.format(cts=sum(self._mcas[c].value())))
 
-        for c in self._frame_callbacks:
-            c(self._num_acquired)
+        if self.acquiring():
+            for c in self._frame_callbacks:
+                c(self._num_acquired)
 
         self._acquired_iter += 1
 
