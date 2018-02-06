@@ -147,7 +147,7 @@ class Xspress3:
                         val = k
 
                 assert val is not None, 'Invalid value {val} for parameter {param}. Available values are: {vals}'.format(
-                    val=v, param=p, vals=','.join(self._parameters[p][3].vals()))
+                    val=v, param=p, vals=','.join(self._parameters[p][3].values()))
                 caput(self._pv(self._parameters[p][0]), val)
             else:
                 caput(self._pv(self._parameters[p][0]), v)
