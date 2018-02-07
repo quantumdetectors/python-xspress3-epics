@@ -2,7 +2,10 @@
 
 A couple of simple classes to aid acquisition and data processing for the [Xspress 3 EPICS IOC](https://github.com/quantumdetectors/xspress3-epics/tree/qd-prod)
 
-## Acquiring
+## Documentation
+https://quantumdetectors.github.io/python-xspress3-epics/
+
+### Acquiring
 
 ```python
 x3 = Xspress3('XSPRESS3-EXAMPLE')
@@ -15,7 +18,7 @@ while x3.acquiring():
     
 ```
 
-## Reading hdf5
+### Reading hdf5
 
 ```python
 with HDF5(file) as h5:
