@@ -1,0 +1,385 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>xspress3.hdf5 &mdash; Xspress 3 EPICS 1.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="Xspress 3 EPICS 1.0.0 documentation" href="../../index.html"/>
+        <link rel="up" title="xspress3" href="../xspress3.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Xspress 3 EPICS
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hdf2csv.html">hdf2csv</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Xspress 3 EPICS</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../xspress3.html">xspress3</a> &raquo;</li>
+        
+      <li>xspress3.hdf5</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for xspress3.hdf5</h1><div class="highlight"><pre>
+<span class="c"># -*- coding: utf-8 -*-</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">import</span> <span class="nn">h5py</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<div class="viewcode-block" id="HDF5"><a class="viewcode-back" href="../../xspress3.html#xspress3.hdf5.HDF5">[docs]</a><span class="k">class</span> <span class="nc">HDF5</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Xspress 3 HDF5 Parser</span>
+
+<span class="sd">    A class for parsing Xspress 3 HDF5 files.</span>
+<span class="sd">    Is context managed so files are automatically closed when done</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">      &gt;&gt;&gt; with HDF5(file) as h5:</span>
+<span class="sd">      &gt;&gt;&gt;     h5.size()</span>
+<span class="sd">      &gt;&gt;&gt;     h5.mca(0,0)</span>
+<span class="sd">      &gt;&gt;&gt;</span>
+<span class="sd">      &gt;&gt;&gt; {&#39;channels&#39;: 1, &#39;frames&#39;: 4, &#39;bins&#39;: 4096}</span>
+<span class="sd">      &gt;&gt;&gt; [0,0,0....0]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="k">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Create an Xspress 3 HDF5 parser instance</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            file (string): the hdf5 file to open</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span> <span class="ow">or</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;Loading {file}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="n">file</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_file</span> <span class="o">=</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_file</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;entry/instrument/detector/data&#39;</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_frames</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_channels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bins</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;Data is of size: {chans} channels, {frames} frames, {bins} bins per MCA&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">chans</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_channels</span><span class="p">,</span> <span class="n">frames</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_frames</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_attrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;entry/instrument/detector/NDAttributes&#39;</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">traceback</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;Closing file&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="HDF5.size"><a class="viewcode-back" href="../../xspress3.html#xspress3.hdf5.HDF5.size">[docs]</a>    <span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the dimensions of the HDF5 file</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            size (dict): the hdf5 file dimensions</span>
+<span class="sd">            </span>
+<span class="sd">                * channels (int): number of channels in the file</span>
+<span class="sd">                * frames (int): number of frames in the file</span>
+<span class="sd">                * bins (int): number of bins per mca in the file</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s">&#39;channels&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_channels</span><span class="p">,</span>
+            <span class="s">&#39;frames&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_frames</span><span class="p">,</span>
+            <span class="s">&#39;bins&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bins</span>
+        <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="HDF5.close"><a class="viewcode-back" href="../../xspress3.html#xspress3.hdf5.HDF5.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Manually close the hdf5 file &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="HDF5.mca"><a class="viewcode-back" href="../../xspress3.html#xspress3.hdf5.HDF5.mca">[docs]</a>    <span class="k">def</span> <span class="nf">mca</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chan</span><span class="p">,</span> <span class="n">frameno</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the specified MCA</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            chan (int): the channel to return an MCA for</span>
+
+<span class="sd">            frameno (int): the frame number to return an MCA for</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            mca (list[int]): the MCA as a list (usually with 4096 elements)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">chan</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_channels</span><span class="p">,</span> <span class="s">&#39;Channel {chan} out of range of channels {chans}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">chan</span><span class="o">=</span><span class="n">chan</span><span class="p">,</span> <span class="n">chans</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_channels</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">frameno</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_frames</span><span class="p">,</span> <span class="s">&#39;Frame no {fr} out of range of frames {frs}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fr</span><span class="o">=</span><span class="n">frameno</span><span class="p">,</span> <span class="n">frs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_frames</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="n">frameno</span><span class="p">,</span><span class="n">chan</span><span class="p">,:]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="HDF5.sca"><a class="viewcode-back" href="../../xspress3.html#xspress3.hdf5.HDF5.sca">[docs]</a>    <span class="k">def</span> <span class="nf">sca</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chan</span><span class="p">,</span> <span class="n">frameno</span><span class="p">,</span> <span class="n">sca</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the specified scalar</span>
+
+<span class="sd">        Aargs:</span>
+<span class="sd">            chan (int): channel number to return scalar for, zero offset</span>
+
+<span class="sd">            frameno (int): the frame number to return scalar for, zero offset</span>
+
+<span class="sd">            sca (int): scalar to return</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            scalar (int): the specified scalar value</span>
+
+<span class="sd">    </span>
+<span class="sd">        Available scalars:</span>
+<span class="sd">            0. Time in ticks</span>
+<span class="sd">            1. ResetTicks</span>
+<span class="sd">            2. ResetCount</span>
+<span class="sd">            3. AllEvent</span>
+<span class="sd">            4. AllGood</span>
+<span class="sd">            5. InWindow 0</span>
+<span class="sd">            6. InWindow 1</span>
+<span class="sd">            7. PileUp</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">chan</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_channels</span><span class="p">,</span> <span class="s">&#39;Channel {chan} out of range of channels {chans}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">chan</span><span class="o">=</span><span class="n">chan</span><span class="p">,</span> <span class="n">chans</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_channels</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">frameno</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_frames</span><span class="p">,</span> <span class="s">&#39;Frame no {fr} out of range of frames {frs}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fr</span><span class="o">=</span><span class="n">frameno</span><span class="p">,</span> <span class="n">frs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_frames</span><span class="p">)</span>
+
+        <span class="n">attrid</span> <span class="o">=</span> <span class="s">&#39;CHAN{chan}SCA{sca}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">chan</span><span class="o">=</span><span class="p">(</span><span class="n">chan</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="n">sca</span><span class="o">=</span><span class="n">sca</span><span class="p">)</span>
+        <span class="n">attr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">attrid</span><span class="p">))</span>
+
+        <span class="k">assert</span> <span class="n">attr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="k">None</span><span class="p">,</span> <span class="s">&#39;No such attribute {attr}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">attr</span><span class="o">=</span><span class="n">attrid</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">attr</span><span class="p">[</span><span class="n">frameno</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="HDF5.dtc"><a class="viewcode-back" href="../../xspress3.html#xspress3.hdf5.HDF5.dtc">[docs]</a>    <span class="k">def</span> <span class="nf">dtc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chan</span><span class="p">,</span> <span class="n">frameno</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the specified deadtime correction parameters</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            chan (int): channel number to return scalar for, zero offset</span>
+
+<span class="sd">            frameno (int): the frame number to return scalar for, zero offset</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dtc_params (list): returns a list of two dead time correction params:</span>
+<span class="sd">                0. dead time correction factor</span>
+<span class="sd">                1. dead time percentage</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">chan</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_channels</span><span class="p">,</span> <span class="s">&#39;Channel {chan} out of range of channels {chans}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">chan</span><span class="o">=</span><span class="n">chan</span><span class="p">,</span> <span class="n">chans</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_channels</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">frameno</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_frames</span><span class="p">,</span> <span class="s">&#39;Frame no {fr} out of range of frames {frs}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fr</span><span class="o">=</span><span class="n">frameno</span><span class="p">,</span> <span class="n">frs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_frames</span><span class="p">)</span>
+
+        <span class="n">dtfid</span> <span class="o">=</span> <span class="s">&#39;CHAN{chan}DTFACTOR&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">chan</span><span class="o">=</span><span class="p">(</span><span class="n">chan</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">dtf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">dtfid</span><span class="p">))</span>
+
+        <span class="k">assert</span> <span class="n">dtf</span> <span class="ow">is</span> <span class="ow">not</span> <span class="k">None</span><span class="p">,</span> <span class="s">&#39;No such attribute {attr}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">attr</span><span class="o">=</span><span class="n">dtfid</span><span class="p">)</span>
+
+        <span class="n">dtpid</span> <span class="o">=</span> <span class="s">&#39;CHAN{chan}DTPERCENT&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">chan</span><span class="o">=</span><span class="p">(</span><span class="n">chan</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">dtp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">dtpid</span><span class="p">))</span>
+
+        <span class="k">assert</span> <span class="n">dtf</span> <span class="ow">is</span> <span class="ow">not</span> <span class="k">None</span><span class="p">,</span> <span class="s">&#39;No such attribute {attr}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">attr</span><span class="o">=</span><span class="n">dtpid</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">dtf</span><span class="p">[</span><span class="n">frameno</span><span class="p">],</span> <span class="n">dtp</span><span class="p">[</span><span class="n">frameno</span><span class="p">]]</span></div></div>
+
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Quantum Detectors.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'1.0.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
