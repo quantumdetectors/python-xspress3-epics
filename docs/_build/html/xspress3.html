@@ -1,0 +1,565 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>xspress3 package &mdash; Xspress 3 EPICS 1.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Xspress 3 EPICS 1.0.0 documentation" href="index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Xspress 3 EPICS
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Xspress 3 EPICS</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>xspress3 package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/xspress3.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="xspress3-package">
+<h1>xspress3 package<a class="headerlink" href="#xspress3-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-xspress3.hdf5">
+<span id="xspress3-hdf5-module"></span><h2>xspress3.hdf5 module<a class="headerlink" href="#module-xspress3.hdf5" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="xspress3.hdf5.HDF5">
+<em class="property">class </em><code class="descclassname">xspress3.hdf5.</code><code class="descname">HDF5</code><span class="sig-paren">(</span><em>file</em>, <em>logger=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xspress3/hdf5.html#HDF5"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xspress3.hdf5.HDF5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Xspress 3 HDF5 Parser</p>
+<p>A class for parsing Xspress 3 HDF5 files.
+Is context managed so files are automatically closed when done</p>
+<dl class="docutils">
+<dt>Example:</dt>
+<dd><div class="first last highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">HDF5</span><span class="p">(</span><span class="n">file</span><span class="p">)</span> <span class="k">as</span> <span class="n">h5</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">h5</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">h5</span><span class="o">.</span><span class="n">mca</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">{</span><span class="s">&#39;channels&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;frames&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s">&#39;bins&#39;</span><span class="p">:</span> <span class="mi">4096</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.</span><span class="o">...</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<p>Create an Xspress 3 HDF5 parser instance</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>file (string): the hdf5 file to open</dd>
+</dl>
+<dl class="method">
+<dt id="xspress3.hdf5.HDF5.close">
+<code class="descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/xspress3/hdf5.html#HDF5.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xspress3.hdf5.HDF5.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Manually close the hdf5 file</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="xspress3.hdf5.HDF5.dtc">
+<code class="descname">dtc</code><span class="sig-paren">(</span><em>chan</em>, <em>frameno</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xspress3/hdf5.html#HDF5.dtc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xspress3.hdf5.HDF5.dtc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the specified deadtime correction parameters</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><p class="first">chan (int): channel number to return scalar for, zero offset</p>
+<p class="last">frameno (int): the frame number to return scalar for, zero offset</p>
+</dd>
+<dt>Returns:</dt>
+<dd><dl class="first last docutils">
+<dt>dtc_params (list): returns a list of two dead time correction params:</dt>
+<dd><ol class="first last arabic simple" start="0">
+<li>dead time correction factor</li>
+<li>dead time percentage</li>
+</ol>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="xspress3.hdf5.HDF5.mca">
+<code class="descname">mca</code><span class="sig-paren">(</span><em>chan</em>, <em>frameno</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xspress3/hdf5.html#HDF5.mca"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xspress3.hdf5.HDF5.mca" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the specified MCA</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><p class="first">chan (int): the channel to return an MCA for</p>
+<p class="last">frameno (int): the frame number to return an MCA for</p>
+</dd>
+<dt>Returns:</dt>
+<dd>mca (list[int]): the MCA as a list (usually with 4096 elements)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="xspress3.hdf5.HDF5.sca">
+<code class="descname">sca</code><span class="sig-paren">(</span><em>chan</em>, <em>frameno</em>, <em>sca</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xspress3/hdf5.html#HDF5.sca"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xspress3.hdf5.HDF5.sca" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the specified scalar</p>
+<dl class="docutils">
+<dt>Aargs:</dt>
+<dd><p class="first">chan (int): channel number to return scalar for, zero offset</p>
+<p>frameno (int): the frame number to return scalar for, zero offset</p>
+<p class="last">sca (int): scalar to return</p>
+</dd>
+<dt>Returns:</dt>
+<dd>scalar (int): the specified scalar value</dd>
+<dt>Available scalars:</dt>
+<dd><ol class="first last arabic simple" start="0">
+<li>Time in ticks</li>
+<li>ResetTicks</li>
+<li>ResetCount</li>
+<li>AllEvent</li>
+<li>AllGood</li>
+<li>InWindow 0</li>
+<li>InWindow 1</li>
+<li>PileUp</li>
+</ol>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="xspress3.hdf5.HDF5.size">
+<code class="descname">size</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/xspress3/hdf5.html#HDF5.size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xspress3.hdf5.HDF5.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the dimensions of the HDF5 file</p>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd><p class="first">size (dict): the hdf5 file dimensions</p>
+<blockquote class="last">
+<div><ul class="simple">
+<li>channels (int): number of channels in the file</li>
+<li>frames (int): number of frames in the file</li>
+<li>bins (int): number of bins per mca in the file</li>
+</ul>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-xspress3.monitorpv">
+<span id="xspress3-monitorpv-module"></span><h2>xspress3.monitorpv module<a class="headerlink" href="#module-xspress3.monitorpv" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="xspress3.monitorpv.MonitorPV">
+<em class="property">class </em><code class="descclassname">xspress3.monitorpv.</code><code class="descname">MonitorPV</code><span class="sig-paren">(</span><em>pv</em>, <em>is_string=False</em>, <em>logger=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xspress3/monitorpv.html#MonitorPV"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xspress3.monitorpv.MonitorPV" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="xspress3.monitorpv.MonitorPV.value">
+<code class="descname">value</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/xspress3/monitorpv.html#MonitorPV.value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xspress3.monitorpv.MonitorPV.value" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-xspress3">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-xspress3" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="xspress3.Xspress3">
+<em class="property">class </em><code class="descclassname">xspress3.</code><code class="descname">Xspress3</code><span class="sig-paren">(</span><em>prefix</em>, <em>logger=None</em>, <em>subframes=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xspress3.html#Xspress3"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xspress3.Xspress3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Xspress 3 Device</p>
+<p>A class encapsulating an Xspress 3 Device</p>
+<dl class="docutils">
+<dt>Example:</dt>
+<dd><div class="first last highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x3</span> <span class="o">=</span> <span class="n">Xspres3</span><span class="p">(</span><span class="n">pv_prefix</span><span class="p">)</span>  <span class="c"># create an x3 object with pv_prefix</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x3</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">exposure_time</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">num_images</span><span class="o">=</span><span class="mi">10</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x3</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<p>Create an Xspress 3 device instance</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>prefix (string): the PV prefix of the device, eg. XSPRESS3-EXAMPLE</dd>
+<dt>Kwargs:</dt>
+<dd>subframes (bool): enable subframe parmeters (special IOC required)</dd>
+</dl>
+<dl class="method">
+<dt id="xspress3.Xspress3.acquire">
+<code class="descname">acquire</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/xspress3.html#Xspress3.acquire"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xspress3.Xspress3.acquire" title="Permalink to this definition">¶</a></dt>
+<dd><p>Starts an acquisition</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="xspress3.Xspress3.acquiring">
+<code class="descname">acquiring</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/xspress3.html#Xspress3.acquiring"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xspress3.Xspress3.acquiring" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the acquisition status</p>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>acquiring (bool): the acquisition status of the device</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="xspress3.Xspress3.add_frame_callback">
+<code class="descname">add_frame_callback</code><span class="sig-paren">(</span><em>callback</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xspress3.html#Xspress3.add_frame_callback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xspress3.Xspress3.add_frame_callback" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a frame change callback</p>
+<p>Adds a callback to the list of callbacks called when a frame change occurs
+during an acquisition. The callback recieves the frame number as an argument</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">callback</span><span class="p">(</span><span class="n">frame_number</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="s">&#39;New frame {f}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">frame_number</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x3</span><span class="o">.</span><span class="n">add_frame_callback</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>callback (callable): the callback to add to the list of frame callbacks</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="xspress3.Xspress3.channels">
+<code class="descname">channels</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/xspress3.html#Xspress3.channels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xspress3.Xspress3.channels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the number of channels on the Xspress 3 system</p>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>no_channels (int): The number of channels on the system</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="xspress3.Xspress3.dropped_frames">
+<code class="descname">dropped_frames</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/xspress3.html#Xspress3.dropped_frames"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xspress3.Xspress3.dropped_frames" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the number of dropped frames in the last acquisition</p>
+<p>At high frames rates EPICS cannot keep up with PVs changing quickly,
+in these situations use file saving and read the hdf5 with the hdf5 
+module. Tests shows this occurs above around 100Hz</p>
+<p>This value will tell you how many frames were dropped</p>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>dropped_frames (int): the number of dropped frames in the last acquisition</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="xspress3.Xspress3.file_saving">
+<code class="descname">file_saving</code><span class="sig-paren">(</span><em>enable</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xspress3.html#Xspress3.file_saving"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xspress3.Xspress3.file_saving" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable file saving</p>
+<p>File saving is disabled after each acquisition, renable or disable it</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>enable (bool): enable or disable file saving</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="xspress3.Xspress3.filename">
+<code class="descname">filename</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/xspress3.html#Xspress3.filename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xspress3.Xspress3.filename" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the current/last hdf5 filename</p>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>filename (string): the current hdf5 filename</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="xspress3.Xspress3.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>param=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xspress3.html#Xspress3.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xspress3.Xspress3.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the value of an attribute</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>param (string): parameter to return the value of</dd>
+<dt>Returns:</dt>
+<dd>value (mixed): the value of the parameter</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="xspress3.Xspress3.mca">
+<code class="descname">mca</code><span class="sig-paren">(</span><em>chan</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xspress3.html#Xspress3.mca"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xspress3.Xspress3.mca" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the MCA for the specified channel</p>
+<p>This value will be automatically updated whenever the PV changes</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>chan (int): channel number to return MCA for, zero offset</dd>
+<dt>Returns:</dt>
+<dd>mca (list[int]): return a list of mca values (usually 4096 values)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="xspress3.Xspress3.num_acquired">
+<code class="descname">num_acquired</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/xspress3.html#Xspress3.num_acquired"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xspress3.Xspress3.num_acquired" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of frames acquired</p>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>num_acquired (int): the number of frames acquired</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="xspress3.Xspress3.sca">
+<code class="descname">sca</code><span class="sig-paren">(</span><em>chan</em>, <em>sca</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xspress3.html#Xspress3.sca"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xspress3.Xspress3.sca" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the specified scalar for the specified channel</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><p class="first">chan (int): channel number to return scalar for, zero offset</p>
+<p class="last">sca (int): scalar to return</p>
+</dd>
+<dt>Returns:</dt>
+<dd>scalar (int): the specified scalar value</dd>
+<dt>Available scalars:</dt>
+<dd><ol class="first last arabic simple" start="0">
+<li>Time in ticks</li>
+<li>ResetTicks</li>
+<li>ResetCount</li>
+<li>AllEvent</li>
+<li>AllGood</li>
+<li>InWindow 0</li>
+<li>InWindow 1</li>
+<li>PileUp</li>
+</ol>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="xspress3.Xspress3.set">
+<code class="descname">set</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xspress3.html#Xspress3.set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xspress3.Xspress3.set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set an attribute on the device</p>
+<dl class="docutils">
+<dt>Kwargs:</dt>
+<dd><p class="first">exposure_time (float): per image exposure time in seconds</p>
+<p>num_images (int): number of images to acquire</p>
+<p>trigger_mode (string): trigger mode (Internal, External)</p>
+<p>file_path (string): path to save hdf5 files to</p>
+<p>file_name (string): file template for hdf5</p>
+<p>file_number (int): file number ({file_path}/{file_name}{file_number}.hdf5)</p>
+<p class="last">file_capture (bool): enable hdf5 saving</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="xspress3.Xspress3.setup_file_saving">
+<code class="descname">setup_file_saving</code><span class="sig-paren">(</span><em>dirn</em>, <em>template</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xspress3.html#Xspress3.setup_file_saving"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xspress3.Xspress3.setup_file_saving" title="Permalink to this definition">¶</a></dt>
+<dd><p>Setup hdf5 file saving</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x3</span><span class="o">.</span><span class="n">setup_file_saving</span><span class="p">(</span><span class="s">&#39;/home/test/data&#39;</span><span class="p">,</span> <span class="s">&#39;test&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s">&#39;/home/test/data/test{number}.hdf5&#39;</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><p class="first">dirn (string): directory to save hdf5 files to</p>
+<p class="last">template (string): file template of hdf5 files</p>
+</dd>
+<dt>Returns:</dt>
+<dd>filename (string): the filename of the last hdf5 captured</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="xspress3.Xspress3.stop">
+<code class="descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/xspress3.html#Xspress3.stop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xspress3.Xspress3.stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stops an acquisiton</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Quantum Detectors.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
