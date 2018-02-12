@@ -44,10 +44,10 @@ class Xspress3:
     }
 
     _sf_parameters = {
-        'subframe_rate': ['SUBFRAME_RATE', 'SUBFRAME_RATE', False],
-        'subframe_cycles': ['SUBFRAME_CYCLES', 'SUBFRAME_CYCLES', False],
-        'subframe_resolution': ['SUBFRAME_RESOLUTION', 'SUBFRAME_RESOLUTION', False],
-        'num_subframes': ['NUM_SUBFRAMES_RBV', 'NUM_SUBFRAMES_RBV', False],
+        'subframe_rate': ['SUBFRAME_RATE', 'SUBFRAME_RATE', False, {}],
+        'subframe_cycles': ['SUBFRAME_CYCLES', 'SUBFRAME_CYCLES', False, {}],
+        'subframe_resolution': ['SUBFRAME_RESOLUTION', 'SUBFRAME_RESOLUTION', False, {}],
+        'num_subframes': [None, 'NUM_SUBFRAMES_RBV', False, {}],
     }
 
 
@@ -65,6 +65,8 @@ class Xspress3:
 
         self._prefix = prefix
         self._channels = caget(self._pv('NUM_CHANNELS_RBV'))
+
+        assert self._channels is not None, 'Could not get number of channels. Is the Xspress 3 IOC running?'
 
         self.logger.info('System has {chans} channels'.format(chans=self._channels))
 
@@ -86,12 +88,12 @@ class Xspress3:
             self._scalars.append(scalars)
 
 
+        if subframes == True:
+            self._parameters = dict(self._parameters, **self._sf_parameters)
+
         # Acq Params
         for k,p in self._parameters.iteritems():
-            self._params[k] = MonitorPV(self._pv(p[1]), p[2])
-
-        if subframes == True:
-            for k,p in self._sf_parameters.iteritems():
+            if p[1] is not None:
                 self._params[k] = MonitorPV(self._pv(p[1]), p[2])
 
 
@@ -180,13 +182,14 @@ class Xspress3:
             file_name (string): file template for hdf5
 
             file_number (int): file number ({file_path}/{file_name}{file_number}.hdf5)
-            
+
             file_capture (bool): enable hdf5 saving
 
         """
 
         for p,v in kwargs.iteritems():
             assert p in self._parameters, 'No such parameter {param}'.format(param=p)
+            assert self._parameters[p][0] is not None, 'Parameter {param} is read only'.format(param=p)
 
             if len(self._parameters[p][3]):
                 val = None
@@ -227,6 +230,8 @@ class Xspress3:
 
         else:
             assert param in self._parameters, 'No such parameter {param}'.format(param=param)
+            assert self._parameters[param][1] is not None, 'Parameter {param} is write only'.format(param=param)
+
             return self._params[param].value()
 
 
