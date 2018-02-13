@@ -95,7 +95,7 @@ class HDF5:
     def sca(self, chan, frameno, sca):
         """ Returns the specified scalar
 
-        Aargs:
+        Args:
             chan (int): channel number to return scalar for, zero offset
 
             frameno (int): the frame number to return scalar for, zero offset
