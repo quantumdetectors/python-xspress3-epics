@@ -2,7 +2,7 @@
 from setuptools import setup
 
 setup(
-    name             = 'xspress3',
+    name             = 'xspress3py3',
     version          = '1.0.0',
     author           = 'Quantum Detectors',
     author_email     = 'info@quantumdetectors.com',
