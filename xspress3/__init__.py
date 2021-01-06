@@ -2,7 +2,7 @@
 import time
 import logging
 
-from monitorpv import MonitorPV
+from .monitorpv import MonitorPV
 from epics import caget, caput, PV
 
 from . import hdf5
@@ -92,7 +92,7 @@ class Xspress3:
             self._parameters = dict(self._parameters, **self._sf_parameters)
 
         # Acq Params
-        for k,p in self._parameters.iteritems():
+        for k,p in self._parameters.items():
             if p[1] is not None:
                 self._params[k] = MonitorPV(self._pv(p[1]), p[2])
 
@@ -187,13 +187,13 @@ class Xspress3:
 
         """
 
-        for p,v in kwargs.iteritems():
+        for p,v in kwargs.items():
             assert p in self._parameters, 'No such parameter {param}'.format(param=p)
             assert self._parameters[p][0] is not None, 'Parameter {param} is read only'.format(param=p)
 
             if len(self._parameters[p][3]):
                 val = None
-                for k,va in self._parameters[p][3].iteritems():
+                for k,va in self._parameters[p][3].items():
                     if v == va:
                         val = k
 
@@ -220,7 +220,7 @@ class Xspress3:
 
         if param is None:
             vals = {}
-            for p,pv in self._params.iteritems():
+            for p,pv in self._params.items():
                 if len(self._parameters[p][3]):
                     val = pv.value()
                     vals[p] = self._parameters[p][3][val]

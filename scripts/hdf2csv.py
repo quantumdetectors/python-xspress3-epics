@@ -41,7 +41,7 @@ with HDF5(args.file) as h5:
 
         lines.append(','.join(line))  
         
-        for scn,sca in scalars.iteritems():
+        for scn,sca in scalars.items():
             line = [scn]
             for c in range(size['channels']):
                 v = h5.sca(c, f, sca)
